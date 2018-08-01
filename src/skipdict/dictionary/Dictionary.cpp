@@ -9,11 +9,11 @@
 #include <zserio/BitSizeOfCalculator.h>
 #include <zserio/BitFieldUtil.h>
 
-#include "skipdict/filter/SkipableDictionary.h"
+#include "skipdict/dictionary/SkippableDictionary.h"
 
 namespace skipdict
 {
-namespace filter
+namespace dictionary
 {
 
 namespace
@@ -21,24 +21,24 @@ namespace
 class _offsetChecker_entries
 {
 public:
-    explicit _offsetChecker_entries(SkipableDictionary& owner) : m_owner(owner) {}
+    explicit _offsetChecker_entries(SkippableDictionary& owner) : m_owner(owner) {}
 
     void checkOffset(size_t _index, size_t byteOffset) const
     {
         if (byteOffset != m_owner.getOffsets().at(_index))
-            throw zserio::CppRuntimeException("Wrong offset for field SkipableDictionary.entries: " +
+            throw zserio::CppRuntimeException("Wrong offset for field SkippableDictionary.entries: " +
                     zserio::convertToString(byteOffset) + " != " +
                     zserio::convertToString(m_owner.getOffsets().at(_index)) + "!");
     }
 
 private:
-    SkipableDictionary& m_owner;
+    SkippableDictionary& m_owner;
 };
 
 class _offsetSetter_entries
 {
 public:
-    explicit _offsetSetter_entries(SkipableDictionary& owner) : m_owner(owner) {}
+    explicit _offsetSetter_entries(SkippableDictionary& owner) : m_owner(owner) {}
 
     void setOffset(size_t _index, size_t byteOffset) const
     {
@@ -47,66 +47,66 @@ public:
     }
 
 private:
-    SkipableDictionary& m_owner;
+    SkippableDictionary& m_owner;
 };
 
-class _elementFactory_SkipableDictionary_entries
+class _elementFactory_SkippableDictionary_entries
 {
 public:
-    explicit _elementFactory_SkipableDictionary_entries(SkipableDictionary& owner) : m_owner(owner) {}
+    explicit _elementFactory_SkippableDictionary_entries(SkippableDictionary& owner) : m_owner(owner) {}
 
     void create(void* storage, zserio::BitStreamReader& _in, size_t _index)
     {
         (void)_index;
-        new (storage) skipdict::filter::DictEntry(_in);
+        new (storage) skipdict::dictionary::DictEntry(_in);
     }
 
 private:
-    SkipableDictionary& m_owner;
+    SkippableDictionary& m_owner;
 };
 
 } // namespace
 
-SkipableDictionary::SkipableDictionary()
+SkippableDictionary::SkippableDictionary()
 {
 }
 
-SkipableDictionary::SkipableDictionary(zserio::BitStreamReader& _in)
+SkippableDictionary::SkippableDictionary(zserio::BitStreamReader& _in)
 {
     read(_in);
 }
 
-zserio::UInt32Array& SkipableDictionary::getOffsets()
+zserio::UInt32Array& SkippableDictionary::getOffsets()
 {
     return m_offsets;
 }
 
-const zserio::UInt32Array& SkipableDictionary::getOffsets() const
+const zserio::UInt32Array& SkippableDictionary::getOffsets() const
 {
     return m_offsets;
 }
 
-void SkipableDictionary::setOffsets(const zserio::UInt32Array& offsets)
+void SkippableDictionary::setOffsets(const zserio::UInt32Array& offsets)
 {
     m_offsets = offsets;
 }
 
-zserio::ObjectArray<skipdict::filter::DictEntry>& SkipableDictionary::getEntries()
+zserio::ObjectArray<skipdict::dictionary::DictEntry>& SkippableDictionary::getEntries()
 {
     return m_entries;
 }
 
-const zserio::ObjectArray<skipdict::filter::DictEntry>& SkipableDictionary::getEntries() const
+const zserio::ObjectArray<skipdict::dictionary::DictEntry>& SkippableDictionary::getEntries() const
 {
     return m_entries;
 }
 
-void SkipableDictionary::setEntries(const zserio::ObjectArray<skipdict::filter::DictEntry>& entries)
+void SkippableDictionary::setEntries(const zserio::ObjectArray<skipdict::dictionary::DictEntry>& entries)
 {
     m_entries = entries;
 }
 
-size_t SkipableDictionary::bitSizeOf(size_t _bitPosition) const
+size_t SkippableDictionary::bitSizeOf(size_t _bitPosition) const
 {
     size_t _endBitPosition = _bitPosition;
 
@@ -118,7 +118,7 @@ size_t SkipableDictionary::bitSizeOf(size_t _bitPosition) const
     return _endBitPosition - _bitPosition;
 }
 
-size_t SkipableDictionary::initializeOffsets(size_t _bitPosition)
+size_t SkippableDictionary::initializeOffsets(size_t _bitPosition)
 {
     size_t _endBitPosition = _bitPosition;
 
@@ -130,7 +130,7 @@ size_t SkipableDictionary::initializeOffsets(size_t _bitPosition)
     return _endBitPosition;
 }
 
-bool SkipableDictionary::operator==(const SkipableDictionary& _other) const
+bool SkippableDictionary::operator==(const SkippableDictionary& _other) const
 {
     if (this != &_other)
     {
@@ -142,7 +142,7 @@ bool SkipableDictionary::operator==(const SkipableDictionary& _other) const
     return true;
 }
 
-int SkipableDictionary::hashCode() const
+int SkippableDictionary::hashCode() const
 {
     int _result = zserio::HASH_SEED;
 
@@ -152,13 +152,13 @@ int SkipableDictionary::hashCode() const
     return _result;
 }
 
-void SkipableDictionary::read(zserio::BitStreamReader& _in)
+void SkippableDictionary::read(zserio::BitStreamReader& _in)
 {
     m_offsets.read(_in, zserio::AutoLength(), UINT8_C(32));
-    m_entries.read(_in, zserio::AutoLength(), _elementFactory_SkipableDictionary_entries(*this), _offsetChecker_entries(*this));
+    m_entries.read(_in, zserio::AutoLength(), _elementFactory_SkippableDictionary_entries(*this), _offsetChecker_entries(*this));
 }
 
-void SkipableDictionary::write(zserio::BitStreamWriter& _out, zserio::PreWriteAction _preWriteAction)
+void SkippableDictionary::write(zserio::BitStreamWriter& _out, zserio::PreWriteAction _preWriteAction)
 {
     if ((_preWriteAction & zserio::PRE_WRITE_INITIALIZE_OFFSETS) != 0)
         initializeOffsets(_out.getBitPosition());
@@ -167,7 +167,7 @@ void SkipableDictionary::write(zserio::BitStreamWriter& _out, zserio::PreWriteAc
     m_entries.write(_out, zserio::AutoLength(), _offsetChecker_entries(*this));
 }
 
-} // namespace filter
+} // namespace dictionary
 } // namespace skipdict
 
 /**
@@ -181,32 +181,21 @@ void SkipableDictionary::write(zserio::BitStreamWriter& _out, zserio::PreWriteAc
 #include <zserio/BitSizeOfCalculator.h>
 #include <zserio/BitFieldUtil.h>
 
-#include "skipdict/filter/DictEntry.h"
+#include "skipdict/dictionary/DictEntry.h"
 
 namespace skipdict
 {
-namespace filter
+namespace dictionary
 {
 
 DictEntry::DictEntry()
 {
-    m_key = uint32_t();
     m_typeCode = uint8_t();
 }
 
 DictEntry::DictEntry(zserio::BitStreamReader& _in)
 {
     read(_in);
-}
-
-uint32_t DictEntry::getKey() const
-{
-    return m_key;
-}
-
-void DictEntry::setKey(uint32_t key)
-{
-    m_key = key;
 }
 
 uint8_t DictEntry::getTypeCode() const
@@ -238,7 +227,6 @@ size_t DictEntry::bitSizeOf(size_t _bitPosition) const
 {
     size_t _endBitPosition = _bitPosition;
 
-    _endBitPosition += zserio::getBitSizeOfVarUInt32(m_key);
     _endBitPosition += UINT8_C(8);
     _endBitPosition += m_value.bitSizeOf(_endBitPosition, zserio::AutoLength(), UINT8_C(8));
 
@@ -249,7 +237,6 @@ size_t DictEntry::initializeOffsets(size_t _bitPosition)
 {
     size_t _endBitPosition = _bitPosition;
 
-    _endBitPosition += zserio::getBitSizeOfVarUInt32(m_key);
     _endBitPosition += UINT8_C(8);
     _endBitPosition = m_value.initializeOffsets(_endBitPosition, zserio::AutoLength(), UINT8_C(8));
 
@@ -261,7 +248,6 @@ bool DictEntry::operator==(const DictEntry& _other) const
     if (this != &_other)
     {
         return
-                (m_key == _other.m_key) &&
                 (m_typeCode == _other.m_typeCode) &&
                 (m_value == _other.m_value);
     }
@@ -273,7 +259,6 @@ int DictEntry::hashCode() const
 {
     int _result = zserio::HASH_SEED;
 
-    _result = zserio::calcHashCode(_result, m_key);
     _result = zserio::calcHashCode(_result, m_typeCode);
     _result = zserio::calcHashCode(_result, m_value);
 
@@ -282,17 +267,108 @@ int DictEntry::hashCode() const
 
 void DictEntry::read(zserio::BitStreamReader& _in)
 {
-    m_key = (uint32_t)_in.readVarUInt32();
     m_typeCode = (uint8_t)_in.readBits(UINT8_C(8));
     m_value.read(_in, zserio::AutoLength(), UINT8_C(8));
 }
 
 void DictEntry::write(zserio::BitStreamWriter& _out, zserio::PreWriteAction)
 {
-    _out.writeVarUInt32(m_key);
     _out.writeBits(m_typeCode, UINT8_C(8));
     m_value.write(_out, zserio::AutoLength(), UINT8_C(8));
 }
 
-} // namespace filter
+} // namespace dictionary
+} // namespace skipdict
+
+/**
+ * Automatically generated by Zserio C++ extension version 1.0.
+ */
+
+#include <zserio/StringConvertUtil.h>
+#include <zserio/CppRuntimeException.h>
+#include <zserio/HashCodeUtil.h>
+#include <zserio/BitPositionUtil.h>
+#include <zserio/BitSizeOfCalculator.h>
+#include <zserio/BitFieldUtil.h>
+
+#include "skipdict/dictionary/DictOffsets.h"
+
+namespace skipdict
+{
+namespace dictionary
+{
+
+DictOffsets::DictOffsets()
+{
+}
+
+DictOffsets::DictOffsets(zserio::BitStreamReader& _in)
+{
+    read(_in);
+}
+
+zserio::UInt32Array& DictOffsets::getOffsets()
+{
+    return m_offsets;
+}
+
+const zserio::UInt32Array& DictOffsets::getOffsets() const
+{
+    return m_offsets;
+}
+
+void DictOffsets::setOffsets(const zserio::UInt32Array& offsets)
+{
+    m_offsets = offsets;
+}
+
+size_t DictOffsets::bitSizeOf(size_t _bitPosition) const
+{
+    size_t _endBitPosition = _bitPosition;
+
+    _endBitPosition += m_offsets.bitSizeOf(_endBitPosition, zserio::AutoLength(), UINT8_C(32));
+
+    return _endBitPosition - _bitPosition;
+}
+
+size_t DictOffsets::initializeOffsets(size_t _bitPosition)
+{
+    size_t _endBitPosition = _bitPosition;
+
+    _endBitPosition = m_offsets.initializeOffsets(_endBitPosition, zserio::AutoLength(), UINT8_C(32));
+
+    return _endBitPosition;
+}
+
+bool DictOffsets::operator==(const DictOffsets& _other) const
+{
+    if (this != &_other)
+    {
+        return
+                (m_offsets == _other.m_offsets);
+    }
+
+    return true;
+}
+
+int DictOffsets::hashCode() const
+{
+    int _result = zserio::HASH_SEED;
+
+    _result = zserio::calcHashCode(_result, m_offsets);
+
+    return _result;
+}
+
+void DictOffsets::read(zserio::BitStreamReader& _in)
+{
+    m_offsets.read(_in, zserio::AutoLength(), UINT8_C(32));
+}
+
+void DictOffsets::write(zserio::BitStreamWriter& _out, zserio::PreWriteAction)
+{
+    m_offsets.write(_out, zserio::AutoLength(), UINT8_C(32));
+}
+
+} // namespace dictionary
 } // namespace skipdict

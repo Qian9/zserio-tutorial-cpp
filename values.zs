@@ -8,18 +8,6 @@ enum uint8 ValueCode
     CLOUD_STORAGE = 3
 };
 
-choice Value(ValueCode code) on code
-{
-    case COMPANY:
-          Company         business;
-    case ROCK_BAND:
-          RockBand        band;
-    case BASKETBALL_TEAM:
-          BasketballTeam  team;
-    case CLOUD_STORAGE:
-          CloudStorage    store;
-};
-
 struct Company
 {
     string    name;
